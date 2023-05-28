@@ -1,4 +1,4 @@
 package com.example.timesheet_api.repository;
 
-public class TimeRecordRepository {
+public interface TimeRecordRepository {
 }
