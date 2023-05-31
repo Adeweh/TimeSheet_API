@@ -1,5 +1,6 @@
 package com.example.timesheet_api.service;
 
+import com.example.timesheet_api.dto.request.LoginRequest;
 import com.example.timesheet_api.dto.request.UpdateEmployeeDetailsRequest;
 import com.example.timesheet_api.dto.response.UpdateEmployeeDetailsResponse;
 import com.example.timesheet_api.exceptions.EmployeeNotFoundException;
@@ -9,6 +10,7 @@ import com.example.timesheet_api.repository.EmployeeRepository;
 import com.example.timesheet_api.repository.TimeRecordRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -21,6 +23,8 @@ public class AdminTaskServiceImpl implements AdminTaskService {
     private final EmployeeRepository employeeRepository;
 
     private final TimeRecordRepository timeRecordRepository;
+
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper = new ModelMapper();
 
 
@@ -59,5 +63,16 @@ public class AdminTaskServiceImpl implements AdminTaskService {
                 "Total working hours: " + totalWorkHours.toHours() + "hours" + totalWorkHours.toMinutesPart() + "minutes";
     }
 
+    @Override
+    public void ensureValidLoginDetails(LoginRequest loginRequest) {
+        Employee employee = employeeRepository.findByEmail(loginRequest.getEmail()).orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), employee.getPassword()))
+            throw new EmployeeNotFoundException("Invalid email or password");
+    }
+
 
 }
+
+
+

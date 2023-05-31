@@ -2,8 +2,11 @@ package com.example.timesheet_api.auth;
 
 
 import com.example.timesheet_api.dto.request.AuthenticationRequest;
+import com.example.timesheet_api.dto.request.LoginRequest;
 import com.example.timesheet_api.dto.request.RegisterRequest;
 import com.example.timesheet_api.dto.response.AuthenticationResponse;
+import com.example.timesheet_api.dto.response.TokenResponse;
+import com.example.timesheet_api.exceptions.EmployeeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +30,9 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(authService.authenticate(request));
 
-
+    }
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) throws EmployeeNotFoundException {
+        return ResponseEntity.ok(authService.login(loginRequest));
     }
 }
