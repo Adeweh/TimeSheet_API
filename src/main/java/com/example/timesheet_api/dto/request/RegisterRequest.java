@@ -2,13 +2,14 @@ package com.example.timesheet_api.dto.request;
 
 import lombok.*;
 
-
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class RegisterRequest {
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
 }
