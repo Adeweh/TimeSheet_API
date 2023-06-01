@@ -3,8 +3,7 @@ package com.example.timesheet_api.controller;
 import com.example.timesheet_api.dto.request.UpdateEmployeeDetailsRequest;
 import com.example.timesheet_api.dto.response.UpdateEmployeeDetailsResponse;
 import com.example.timesheet_api.model.Employee;
-import com.example.timesheet_api.service.AdminTaskService;
-import com.example.timesheet_api.service.AdminTaskServiceImpl;
+import com.example.timesheet_api.service.EmployeeServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/employee")
 @AllArgsConstructor
 public class AdminTaskController {
-    private  final AdminTaskServiceImpl adminTaskService;
+    private  final EmployeeServiceImpl adminTaskService;
 
     @PostMapping
     public ResponseEntity<Employee> addEmployee (@RequestBody Employee employee){

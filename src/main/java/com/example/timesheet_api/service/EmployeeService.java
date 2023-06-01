@@ -5,7 +5,7 @@ import com.example.timesheet_api.dto.request.UpdateEmployeeDetailsRequest;
 import com.example.timesheet_api.dto.response.UpdateEmployeeDetailsResponse;
 import com.example.timesheet_api.model.Employee;
 
-public interface AdminTaskService {
+public interface EmployeeService {
     Employee addEmployee(Employee employee);
    UpdateEmployeeDetailsResponse modifyEmployee(String employeeId, UpdateEmployeeDetailsRequest employee);
 

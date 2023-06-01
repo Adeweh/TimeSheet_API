@@ -10,9 +10,8 @@ import com.example.timesheet_api.dto.response.TokenResponse;
 import com.example.timesheet_api.model.Employee;
 import com.example.timesheet_api.model.Role;
 import com.example.timesheet_api.repository.EmployeeRepository;
-import com.example.timesheet_api.service.AdminTaskService;
+import com.example.timesheet_api.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,27 +24,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
     private final EmployeeRepository repository;
-    private final AdminTaskService adminTaskService;
+    private final EmployeeService employeeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
     private final AuthenticationProvider authenticationProvider;
     private final TokenGeneratorService tokenGeneratorService;
+    private final TokenBlacklistService tokenBlacklistService;
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
-        Employee employee = Employee.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.NON_ADMIN)
-                .build();
-        repository.save(employee);
-        var jwtToken = jwtService.generateToken(employee);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .build();
+    public String logout(String token) {
+        tokenBlacklistService.blacklist(token);
+        return "Logout Successful";
     }
 
     @Override
@@ -58,15 +47,13 @@ public class AuthServiceImpl implements AuthService{
         );
         Employee employee = repository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(employee);
-
-
         return AuthenticationResponse.builder().accessToken(jwtToken).build();
 
     }
 
     @Override
     public TokenResponse login(LoginRequest loginRequest) {
-        adminTaskService.ensureValidLoginDetails(loginRequest);
+        employeeService.ensureValidLoginDetails(loginRequest);
         Authentication authentication = authenticationProvider
                 .authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getEmail(), loginRequest.getPassword()));
         return tokenGeneratorService.createToken(authentication);

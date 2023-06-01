@@ -1,5 +1,6 @@
 package com.example.timesheet_api.config;
 
+import com.example.timesheet_api.auth.WebMvcCOnfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers(WebMvcCOnfig.patterns)
                 .permitAll()
                 .anyRequest()
                 .authenticated()

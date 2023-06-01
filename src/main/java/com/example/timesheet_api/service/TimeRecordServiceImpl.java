@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class NonAdminTaskServiceImpl implements NonAdminTaskService {
+public class TimeRecordServiceImpl implements TimeRecordService {
     private final TimeRecordRepository timeRecordRepository;
     private final EmployeeRepository employeeRepository;
     @Override
@@ -58,7 +58,7 @@ public class NonAdminTaskServiceImpl implements NonAdminTaskService {
 
         TimeRecord activeEntry = timeRecordRepository.findActiveEntryByEmployeeId(employeeId);
 
-        activeEntry.setStartBreak(LocalDateTime.now());
+        activeEntry.setEndBreak(LocalDateTime.now());
 
         return timeRecordRepository.save(activeEntry);
     }

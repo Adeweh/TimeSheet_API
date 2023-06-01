@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class AdminTaskServiceImpl implements AdminTaskService {
+public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
@@ -30,6 +30,7 @@ public class AdminTaskServiceImpl implements AdminTaskService {
 
     @Override
     public Employee addEmployee(Employee employee) {
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
 
@@ -52,7 +53,6 @@ public class AdminTaskServiceImpl implements AdminTaskService {
 
         List<TimeRecord> timeRecordList = timeRecordRepository.findByEmployeeId(employeeId);
         Duration totalWorkHours = Duration.ZERO;
-
         for (TimeRecord record: timeRecordList){
             if(record.getClockOutTime() != null && record.getClockInTime() != null){
                 totalWorkHours = totalWorkHours.plus(Duration.between(record.getClockInTime(), record.getClockOutTime()));
