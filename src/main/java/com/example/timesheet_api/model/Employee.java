@@ -19,7 +19,6 @@ import java.util.List;
 
 public class Employee implements UserDetails {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @UuidGenerator
     private String id;
     private String firstName;
