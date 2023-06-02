@@ -2,6 +2,7 @@ package com.example.timesheet_api.service;
 
 import com.example.timesheet_api.dto.request.UpdateEmployeeDetailsRequest;
 import com.example.timesheet_api.dto.response.UpdateEmployeeDetailsResponse;
+import com.example.timesheet_api.exceptions.EmployeeNotFoundException;
 import com.example.timesheet_api.model.Employee;
 import com.example.timesheet_api.model.Role;
 import com.example.timesheet_api.model.TimeRecord;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -61,6 +62,15 @@ class EmployeeServiceImplTest {
     }
 
     @Test
+    void testAddEmployee_ThrowsException() {
+        Employee employee = new Employee();
+        employee.setEmail("joe@mail.com");
+
+        when(employeeRepository.existsByEmail(any())).thenReturn(true);
+        assertThrows(RuntimeException.class, () -> employeeService.addEmployee(employee));
+    }
+
+    @Test
     void modifyEmployee() {
         Employee employee = new Employee();
         employee.setId("111");
@@ -86,6 +96,17 @@ class EmployeeServiceImplTest {
         assertEquals("Employee updated", result.getMessage());
         verify(employeeRepository, times(1)).findById(any());
 
+    }
+    @Test
+    void testModifyEmployee_ThrowsException() {
+        UpdateEmployeeDetailsRequest employeeRequest = UpdateEmployeeDetailsRequest.builder()
+                .firstName("Jane")
+                .lastName("Dee")
+                .email("jane@email.com")
+                .phoneNumber("226773983")
+                .build();
+
+        assertThrows(EmployeeNotFoundException.class, () -> employeeService.modifyEmployee("11", employeeRequest));
     }
 
 
@@ -113,9 +134,7 @@ class EmployeeServiceImplTest {
 
         String result = employeeService.generatePayslip(employee.getId());
 
-        String expectedPayslip = "Payslip for employee: John Doe\n" +
-                "Total working hours: 8 hours 0 minutes";
-
+        assertNotNull(result);
         assertEquals(LocalDateTime.parse("2023-06-01T09:00:00"), timeRecord.getClockInTime());
         verify(employeeRepository, times(1)).findById(employee.getId());
         verify(timeRecordRepository, times(1)).findByEmployeeId(employee.getId());
