@@ -35,6 +35,8 @@ public class TimeRecordServiceImpl implements TimeRecordService {
         Employee findEmployee = employeeRepository.findById(employeeId).orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
 
         TimeRecord activeEntry = timeRecordRepository.findActiveEntryByEmployeeId(employeeId);
+        TimeRecord timeRecord = new TimeRecord();
+        timeRecord.setEmployee(findEmployee);
 
         activeEntry.setClockOutTime(LocalDateTime.now());
 
@@ -46,6 +48,8 @@ public class TimeRecordServiceImpl implements TimeRecordService {
         Employee findEmployee = employeeRepository.findById(employeeId).orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
 
         TimeRecord activeEntry = timeRecordRepository.findActiveEntryByEmployeeId(employeeId);
+        TimeRecord timeRecord = new TimeRecord();
+        timeRecord.setEmployee(findEmployee);
 
         activeEntry.setStartBreak(LocalDateTime.now());
 
@@ -57,6 +61,8 @@ public class TimeRecordServiceImpl implements TimeRecordService {
         Employee findEmployee = employeeRepository.findById(employeeId).orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
 
         TimeRecord activeEntry = timeRecordRepository.findActiveEntryByEmployeeId(employeeId);
+        TimeRecord timeRecord = new TimeRecord();
+        timeRecord.setEmployee(findEmployee);
 
         activeEntry.setEndBreak(LocalDateTime.now());
 
