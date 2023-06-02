@@ -5,9 +5,11 @@ import com.example.timesheet_api.dto.request.UpdateEmployeeDetailsRequest;
 import com.example.timesheet_api.dto.response.UpdateEmployeeDetailsResponse;
 import com.example.timesheet_api.exceptions.EmployeeNotFoundException;
 import com.example.timesheet_api.model.Employee;
+import com.example.timesheet_api.model.Role;
 import com.example.timesheet_api.model.TimeRecord;
 import com.example.timesheet_api.repository.EmployeeRepository;
 import com.example.timesheet_api.repository.TimeRecordRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(Employee employee) {
+        if(employeeRepository.existsByEmail(employee.getEmail())) throw new RuntimeException("Email Exists");
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
@@ -38,13 +41,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public UpdateEmployeeDetailsResponse modifyEmployee(String employeeId, UpdateEmployeeDetailsRequest employee) {
         Employee findEmployee = employeeRepository.findById(employeeId).orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
         mapper.map(employee, findEmployee);
-
         employeeRepository.save(findEmployee);
 
-        return UpdateEmployeeDetailsResponse
-                .builder()
-                .message("Employee updates")
-                .build();
+        return new UpdateEmployeeDetailsResponse("Employee updated");
     }
 
     @Override
@@ -72,6 +71,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
+    @PostConstruct
+    void createAdmin(){
+        if (!employeeRepository.existsByEmail("admin@mail.com")){
+            Employee employee = Employee.builder()
+                    .email("admin@mail.com")
+                    .password(passwordEncoder.encode("Admin123"))
+                    .role(Role.ADMIN)
+                    .build();
+            employeeRepository.save(employee);
+        }
+    }
 }
 
 

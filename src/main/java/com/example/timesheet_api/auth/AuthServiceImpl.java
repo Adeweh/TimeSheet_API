@@ -4,11 +4,9 @@ import com.example.timesheet_api.config.JwtService;
 import com.example.timesheet_api.config.TokenGeneratorService;
 import com.example.timesheet_api.dto.request.AuthenticationRequest;
 import com.example.timesheet_api.dto.request.LoginRequest;
-import com.example.timesheet_api.dto.request.RegisterRequest;
 import com.example.timesheet_api.dto.response.AuthenticationResponse;
 import com.example.timesheet_api.dto.response.TokenResponse;
 import com.example.timesheet_api.model.Employee;
-import com.example.timesheet_api.model.Role;
 import com.example.timesheet_api.repository.EmployeeRepository;
 import com.example.timesheet_api.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +34,6 @@ public class AuthServiceImpl implements AuthService{
         tokenBlacklistService.blacklist(token);
         return "Logout Successful";
     }
-
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authManager.authenticate(
@@ -50,7 +47,6 @@ public class AuthServiceImpl implements AuthService{
         return AuthenticationResponse.builder().accessToken(jwtToken).build();
 
     }
-
     @Override
     public TokenResponse login(LoginRequest loginRequest) {
         employeeService.ensureValidLoginDetails(loginRequest);

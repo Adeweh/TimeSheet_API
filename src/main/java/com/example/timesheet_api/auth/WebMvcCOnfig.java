@@ -11,8 +11,7 @@ public class WebMvcCOnfig implements WebMvcConfigurer {
     private BlackListFilter filter;
 
     public static String[] patterns = {
-            "/api/v1/auth/login",
-            "/api/v1/employee"
+            "/api/v1/auth/login"
     };
 
     @Override

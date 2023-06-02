@@ -27,6 +27,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(WebMvcCOnfig.patterns)
                 .permitAll()
+                .requestMatchers("/api/v1/employee/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/v1/timerecord/**").hasAuthority("NON_ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
